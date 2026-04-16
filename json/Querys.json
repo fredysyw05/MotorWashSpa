@@ -1,0 +1,76 @@
+use parqueDB
+
+db.createCollection("Parque")
+
+
+//crear objeto carro//
+
+
+db.parque.insertMany([
+{
+    "placa": "ABC123",
+    "numero_serie": "XYZ987654",
+    "modelo": 2022,
+    "marca": "Toyoya",
+    "kilometraje": 15000,
+    "tipo": "Sedan"
+},
+{
+    "placa": "DEF456",
+    "numero_serie": "LMN12345",
+    "modelo": 2021,
+    "mraca": "Ford",
+    "kilometraje": 20000,
+    "tipo": "SUV"
+},
+{
+    "placa": "GMI789",
+    "numero_serie": "OPQ678910",
+    "modelo": 2020,
+    "mraca": "Chevrolet",
+    "kilometraje": 18000,
+    "tipo": "Hatchback"
+},
+{
+    "placa": "JKL012",
+    "numero_serie": "UVW234567",
+    "modelo": 2023,
+    "mraca": "Honda",
+    "kilometraje": 5000,
+    "tipo": "Coupe"
+},
+{
+    "placa": "MNO345",
+    "numero_serie": "RST789012",
+    "modelo": 2019,
+    "mraca": "Hyundai",
+    "kilometraje": 25000,
+    "tipo": "Sedan"
+},
+])
+
+//CListar todos los documentos en la colección//
+
+db.parque.find()
+
+//Actualizar datos en documentos de la colección//
+//Actualiza el primer registro//
+
+db.parque.updateOne(
+{ "placa": "ABC123" }, 
+{ $set: { "kilometraje": 16000 } }
+)
+//Actualiza el ultimo registro//
+
+db.parque.updateOne(
+{"placa":"MNO345"}, 
+{$set: { "kilometraje": 26000 } }
+)
+//Borrar un documento de la colección//
+//Elimina el tercer documento//
+
+db.parque.deleteOne({ "placa": "GHI789"})
+
+//Consultar documento por número de placa//
+
+db.parque.find({ "placa": "DEF456"})

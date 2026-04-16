@@ -1,0 +1,450 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+  background-color: #fff;
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, #0A4C80, #3B7DD8);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0.5rem 0;
+  /* 🔹 más delgado (antes 1rem) */
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  /* 🔹 menos espacio vertical */
+}
+
+.logo img {
+  height: 45px;
+  /* 🔹 ajusta tamaño del logo si se ve grande */
+}
+
+/* 🔹 Estilo general del nav */
+.site-nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.site-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.site-nav a:hover {
+  opacity: 0.8;
+}
+
+/* 🔹 Botón del menú */
+.menu-toggle {
+  display: none;
+  background: none;
+  color: #fff;
+  font-size: 1.8rem;
+  border: none;
+  cursor: pointer;
+}
+
+/* =========================
+🔸 MENÚ RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+  /* Ocultamos el menú normal */
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    /* justo debajo del header */
+    left: 0;
+    width: 100%;
+    background: #0A4C80;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  /* Cuando el menú está activo, se muestra */
+  .site-nav.active {
+    display: flex;
+    ;
+  }
+
+  /* Alineamos los links en columna */
+  .site-nav ul {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .site-nav ul li a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  /* Mostrar el botón ☰ en móviles */
+  .menu-toggle {
+    display: block;
+  }
+}
+
+/* HERO */
+.hero {
+  background: url("../images/hero.jpg") center/cover no-repeat;
+  color: #fff;
+  height: 90vh;
+  position: relative;
+}
+
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.hero-content {
+  text-align: center;
+  max-width: 700px;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* BOTONES */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-primary {
+  background-color: #3B7DD8;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #0A4C80;
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(10, 76, 128, 0.25);
+}
+
+/* SECCIONES */
+.section {
+  padding: 4rem 0;
+}
+
+.bg-light {
+  background-color: #F5F6F8;
+}
+
+/* RESALTAR PÁGINA ACTIVA */
+.site-nav a.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+}
+
+
+/* SERVICIOS */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* FORMULARIOS */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+input,
+textarea,
+select {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+button {
+  border: none;
+}
+
+/* GALERÍA */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* ACERCA DE */
+.about-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.about-img img {
+  border-radius: 10px;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #0A4C80;
+  color: #fff;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.social-links a {
+  color: #fff;
+  margin: 0 0.5rem;
+  text-decoration: none;
+}
+
+/* =========================
+  ANIMACIONES UNIFICADAS
+  Reemplaza aquí las reglas antiguas de .fade-in, .slide-*, .service-card, .card-inner
+========================= */
+
+/* --- Estado inicial general (para elementos que se animan sobre sí mismos) --- */
+.fade-in,
+.slide-left,
+.slide-right,
+.slide-up {
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity;
+}
+
+/* --- Animaciones en elementos "normales" (hero, about, contact, etc.) --- */
+.fade-in.show {
+  animation: fadeInAnim 0.6s ease-out forwards;
+}
+
+@keyframes fadeInAnim {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-left.show {
+  animation: slideLeft 0.6s ease-out forwards;
+}
+
+@keyframes slideLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-right.show {
+  animation: slideRight 0.6s ease-out forwards;
+}
+
+@keyframes slideRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-up.show {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Soporte para tarjetas .service-card que contienen .card-inner --- */
+/* Estado inicial del hijo (card-inner) */
+.service-card .card-inner {
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity;
+  transition: transform 0.45s cubic-bezier(.2, .9, .2, 1), opacity 0.45s ease;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  /* importante para bordes e imágenes */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Cuando el padre recibe .show, el hijo anima */
+.service-card.show .card-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* También permitimos variantes slide-left/right/up en card-inner si los usas */
+.service-card.slide-left .card-inner {
+  transform: translateX(-30px);
+}
+
+.service-card.slide-right .card-inner {
+  transform: translateX(30px);
+}
+
+.service-card.slide-up .card-inner {
+  transform: translateY(30px);
+}
+
+.service-card.slide-left.show .card-inner,
+.service-card.slide-right.show .card-inner,
+.service-card.slide-up.show .card-inner {
+  transform: translateX(0) translateY(0);
+  opacity: 1;
+}
+
+/* --- TARJETA padre: hover & click (aplica transform al hijo para evitar conflicto) --- */
+.service-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  /* dejamos al padre sin transform directo que compita; solo transición visual */
+  transform-origin: center;
+  transition: transform 220ms cubic-bezier(.2, .9, .2, 1);
+  will-change: transform;
+}
+
+/* Hover: transform applied to the child so both anim + hover compose nicely */
+.service-card:hover .card-inner {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* Click: effect on child */
+.service-card:active .card-inner {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Imagen: ocupa ancho y respeta border-radius del .card-inner (gracias a overflow:hidden) */
+.service-card .card-inner img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+/* Textos dentro */
+.service-card .card-inner h3,
+.service-card .card-inner p {
+  padding: 0.75rem 1rem;
+}
+
+.services-grid .service-card:nth-child(1) .card-inner {
+  transition-delay: 0.05s;
+}
+
+.services-grid .service-card:nth-child(2) .card-inner {
+  transition-delay: 0.12s;
+}
+
+.services-grid .service-card:nth-child(3) .card-inner {
+  transition-delay: 0.19s;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+
+  /* Ocultamos el menú normal */
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    /* 🔹 ancho parcial */
+    background: #0A4C80;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 0 10px;
+  }
+
+  /* Resaltar opción activa del menú  */
+  .site-nav.active {
+    display: flex;
+  }
+
+  /* Alineamos los links en columna */
+  .site-nav ul {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .site-nav ul li a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  /* Mostrar el botón ☰ en móviles */
+  .menu-toggle {
+    display: block;
+  }
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motor Wash Spa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="images/casco.png" type="image/png">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-content">
+      <a href="#inicio" class="logo">
+        <img src="images/logo.png" alt="Motor Wash Spa">
+      </a>
+      <nav class="site-nav" id="navbar">
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#reservas">Reservas</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#acerca">Acerca de</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+      <button class="menu-toggle" id="menu-btn">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="inicio" class="hero">
+    <div class="hero-overlay">
+      <div class="container hero-content">
+        <h1>El mejor cuidado para tu motocicleta</h1>
+        <p>Lavado, detallado y mantenimiento con la calidad que tu moto merece 🏍️✨</p>
+        <a href="#servicios" class="btn btn-primary">Ver servicios</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section id="servicios" class="services section">
+    <div class="container">
+      <h2>Nuestros Servicios</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <img src="images/servicio1.jpg" alt="Lavado Básico">
+          <h3>Lavado Básico</h3>
+          <p>Hidrolavado, enjuague y secado profesional.</p>
+        </div>
+        <div class="service-card">
+          <img src="images/servicio2.jpg" alt="Lavado Premium">
+          <h3>Lavado Premium</h3>
+          <p>Incluye limpieza de motor y protección cerámica.</p>
+        </div>
+        <div class="service-card">
+          <img src="images/servicio3.jpg" alt="Detallado Total">
+          <h3>Detallado Total</h3>
+          <p>Servicio completo con pulido, encerado y aromatización.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESERVAS -->
+  <section id="reservas" class="reservas section bg-light">
+    <div class="container">
+      <h2>Reserva tu servicio</h2>
+      <p>Selecciona tu fecha y tipo de servicio para tu próxima visita.</p>
+      <form class="reserva-form">
+        <input type="text" placeholder="Tu nombre" required>
+        <input type="email" placeholder="Tu correo" required>
+        <input type="date" required>
+        <select required>
+          <option value="">Selecciona un servicio</option>
+          <option>Lavado Básico</option>
+          <option>Lavado Premium</option>
+          <option>Detallado Total</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Reservar ahora</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <section id="galeria" class="gallery section">
+    <div class="container">
+      <h2>Galería</h2>
+      <div class="gallery-grid">
+        <img src="images/galeria1.jpg" alt="Moto limpia">
+        <img src="images/galeria2.jpg" alt="Detalle de lavado">
+        <img src="images/galeria3.jpg" alt="Moto brillante">
+        <img src="images/galeria4.jpg" alt="Servicio en acción">
+      </div>
+    </div>
+  </section>
+
+  <!-- ACERCA DE -->
+  <section id="acerca" class="about section bg-light">
+    <div class="container about-content">
+      <div class="about-text">
+        <h2>Acerca de Nosotros</h2>
+        <p>Somos apasionados por las motocicletas y entendemos la importancia de mantenerlas impecables. En Motor Wash
+          Spa ofrecemos un servicio especializado con productos de alta calidad y atención personalizada.</p>
+      </div>
+      <div class="about-img">
+        <img src="images/logo.png" alt="Motor Wash Spa">
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto" class="contact section">
+    <div class="container">
+      <h2>Contáctanos</h2>
+      <form class="contact-form">
+        <input type="text" placeholder="Tu nombre" required>
+        <input type="email" placeholder="Tu correo" required>
+        <textarea rows="5" placeholder="Tu mensaje" required></textarea>
+        <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+      </form>
+      <div class="contact-info">
+        <p>📍 Medellín, Colombia</p>
+        <p>📞 +57 300 000 0000</p>
+        <p>✉️ contacto@motorwashspa.com</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>© 2025 Motor Wash Spa — Todos los derechos reservados</p>
+      <div class="social-links">
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">WhatsApp</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>

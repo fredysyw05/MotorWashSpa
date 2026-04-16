@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Wash Spa | Reservas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/casco.png" type="image/png">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Motor Wash Spa">
+            </a>
+            <nav class="site-nav" id="navbar">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="services.html">Servicios</a></li>
+                    <li><a href="reservations.html">Reservas</a></li>
+                    <li><a href="gallery.html">Galería</a></li>
+                    <li><a href="about.html">Acerca de</a></li>
+                    <li><a href="contact.html">Contacto</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" id="menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- RESERVAS -->
+    <section id="reservas" class="reservas section bg-light">
+        <div class="container">
+            <h2>Reserva tu servicio</h2>
+            <p>Selecciona tu fecha y tipo de servicio para tu próxima visita.</p>
+            <form class="reserva-form fade-in">
+                <input type="text" placeholder="Tu nombre" required>
+                <input type="email" placeholder="Tu correo" required>
+                <input type="date" required>
+                <select id="servicio-select" required>
+                    <option value="">Selecciona un servicio</option>
+                    <option value="basico">Lavado Básico</option>
+                    <option value="premium">Lavado Premium</option>
+                    <option value="detallado">Detallado Total</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary">Reservar ahora</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>© 2025 Motor Wash Spa — Todos los derechos reservados</p>
+            <div class="social-links">
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">WhatsApp</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
