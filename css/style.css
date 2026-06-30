@@ -528,3 +528,30 @@ button {
     50% { opacity: 0.7; }
     100% { opacity: 1; }
 }
+/* ==========================================
+   ESTILOS Y ANIMACIONES: BOTÓN CERRAR SESIÓN
+   ========================================== */
+.btn-danger {
+    background-color: #ff4d4d; /* Rojo base llamativo */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    /* Animación fluida: dura 0.3s el color y 0.2s el movimiento */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto al pasar el cursor (Hover) */
+.btn-danger:hover {
+    background-color: #e60000; /* Un rojo más oscuro y serio */
+    transform: translateY(-2px); /* Se eleva sutilmente 2 píxeles */
+    box-shadow: 0 4px 12px rgba(230, 0, 0, 0.35); /* Un resplandor rojo elegante abajo */
+}
+
+/* Efecto al hacer clic (Active) */
+.btn-danger:active {
+    transform: translateY(0); /* Regresa a su posición original al hundirse */
+    box-shadow: 0 2px 5px rgba(230, 0, 0, 0.2);
+}
