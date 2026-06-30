@@ -36,19 +36,25 @@
         <div class="container">
             <h2>Reserva tu servicio</h2>
             <p>Selecciona tu fecha y tipo de servicio para tu próxima visita.</p>
-            <form class="reserva-form fade-in">
-                <input type="text" placeholder="Tu nombre" required>
-                <input type="email" placeholder="Tu correo" required>
-                <input type="date" required>
+            <form id="reserva-form" class="reserva-form fade-in">
+                <label for="reserva-fecha">Fecha del servicio:</label>
+                <input type="date" id="reserva-fecha" required>
+
+                <label for="reserva-hora">Hora del servicio:</label>
+                <input type="time" id="reserva-hora" required>
+
+                <label for="servicio-select">Tipo de servicio:</label>
                 <select id="servicio-select" required>
                     <option value="">Selecciona un servicio</option>
-                    <option value="basico">Lavado Básico</option>
-                    <option value="premium">Lavado Premium</option>
-                    <option value="detallado">Detallado Total</option>
+                    <option value="1">Lavado Básico</option>
+                    <option value="2">Lavado Premium</option>
+                    <option value="3">Detallado Total</option>
                 </select>
 
                 <button type="submit" class="btn btn-primary">Reservar ahora</button>
             </form>
+
+            <p id="reserva-mensaje" style="margin-top: 15px; font-weight: bold; text-align: center;"></p>
         </div>
     </section>
 
@@ -65,6 +71,7 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script src="js/reservas.js"></script>
 </body>
 
 </html>

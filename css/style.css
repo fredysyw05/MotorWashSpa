@@ -448,3 +448,83 @@ button {
     display: block;
   }
 }
+/* ==========================================
+   ESTILOS Y ANIMACIONES PARA EL PANEL DE OPERARIOS
+   ========================================== */
+
+/* Estilo base para los botones de acción en la tabla */
+.btn-action {
+    padding: 6px 14px;
+    font-size: 0.85em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    /* Misma transición fluida de tu plantilla */
+    transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+}
+
+/* Botón Iniciar (Verde) */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover:not([disabled]) {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Botón Terminar (Azul) */
+.btn-info {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #0069d9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Estado cuando el botón está PRESIONADO (Active) */
+.btn-action:active:not([disabled]) {
+    transform: translateY(0);
+}
+
+/* ESTADO DESHABILITADO (Cuando el operario está ocupado) */
+.btn-action:disabled {
+    background-color: #6c757d; /* Gris opaco */
+    color: #e2e2e2;
+    opacity: 0.6;
+    cursor: not-allowed; /* Cambia el cursor a un símbolo de bloqueo */
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* DISEÑO DE LAS ETIQUETAS DE ESTADO (BADGES) */
+.badge-pendiente {
+    background: #ffeeba;
+    color: #856404;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.badge-en-curso {
+    background: #b8daff;
+    color: #004085;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+    animation: palpitar 2s infinite; /* Pequeño efecto visual de actividad */
+}
+
+@keyframes palpitar {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
