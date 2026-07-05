@@ -1,11 +1,14 @@
-// 1. COMPROBACIÓN DE SEGURIDAD AL CARGAR LA PÁGINA
+// Comprobación de seguridad al cargar la página
 // Revisamos si el usuario tiene un token guardado en el localStorage
-const token = localStorage.getItem('token');
+const tokenAcceso = localStorage.getItem('token');
 
-if (!token) {
-    // Si no hay token, el usuario no se ha autenticado. Lo redirigimos al login.
-    alert('Debes iniciar sesión para poder agendar una reserva.');
-    window.location.href = 'login.html';
+if (!tokenAcceso) {
+    // 🕵️‍♂️ Capturamos el servicio que venía en la URL (?service=X) para no perderlo
+    const params = new URLSearchParams(window.location.search);
+    const servicioId = params.get('service') || '';
+
+    // 🚀 Mandamos ambos datos al login en la URL
+    window.location.href = `login.html?motivo=reservar&service=${servicioId}`;
 }
 
 // ... (Aquí está tu comprobación del token)

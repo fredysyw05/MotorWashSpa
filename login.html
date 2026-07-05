@@ -1,24 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motor Wash Spa | Login</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/casco.png" type="image/png">
 </head>
+
 <body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Motor Wash Spa">
+            </a>
+            <nav class="site-nav" id="navbar">
+                <ul>
+                    <li><a href="index.html">🏠︎Inicio</a></li>
+                    <li><a href="services.html">✨Servicios</a></li>
+                    <li><a href="reservations.html">📅Reservas</a></li>
+                    <li><a href="gallery.html">📸Galería</a></li>
+                    <li><a href="about.html">📣Acerca de</a></li>
+                    <li><a href="contact.html">📩Contacto</a></li>
+                    <li id="auth-nav-item"><a href="login.html" class="nav-login-btn">🚀Entrar/Registro</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" id="menu-btn">☰</button>
+        </div>
+    </header>
     <section class="contact section bg-light">
         <div class="container">
             <h2>Iniciar Sesión</h2>
             <form id="login-form" class="contact-form">
+                <div id="login-mensaje"
+                    style="margin-bottom: 15px; font-weight: bold; text-align: center; font-size: 0.9rem;"></div>
                 <input type="email" id="login-correo" placeholder="Tu correo electrónico" required>
-                <input type="password" id="login-password" placeholder="Tu contraseña" required>
+                <!-- 👁️ Contenedor Contraseña del Login -->
+                <div class="password-wrapper" style="position: relative; width: 100%;">
+                    <!-- NOTA: Asegúrate de que el id sea 'login-password' o cámbialo por el que ya tengas configurado -->
+                    <input type="password" id="login-password" placeholder="Ingresa tu contraseña" required
+                        style="width: 100%; padding-right: 40px;">
+                    <span id="toggle-login-pass"
+                        style="position: absolute; right: 12px; top: 35%; transform: translateY(-50%); cursor: pointer; font-size: 1.2rem; user-select: none;">👁️</span>
+                </div>
                 <button type="submit" class="btn btn-primary">Ingresar</button>
             </form>
             <p id="login-mensaje" style="margin-top: 15px; font-weight: bold; text-align: center;"></p>
+        </div>
+        <div class="login-utilities"
+            style="margin-top: 20px; text-align: center; display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem;">
+
+            <!-- Link para recuperar contraseña -->
+            <a href="recuperar-password.html"
+                style="color: #e74c3c; text-decoration: none; font-weight: 500; transition: color 0.3s;"
+                onmouseover="this.style.color='#c0392b'" onmouseout="this.style.color='#e74c3c'">
+                ¿Olvidaste tu contraseña?
+            </a>
+
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
+
+            <!-- Link para ir al registro público de clientes -->
+            <p style="margin: 0; color: #666;">
+                ¿Eres nuevo cliente?
+                <a href="registro.html"
+                    style="color: #3498db; font-weight: bold; text-decoration: none; margin-left: 5px; transition: color 0.3s;"
+                    onmouseover="this.style.color='#2980b9'" onmouseout="this.style.color='#3498db'">
+                    Regístrate aquí
+                </a>
+            </p>
         </div>
     </section>
 
     <script src="js/auth.js"></script>
 </body>
+
 </html>

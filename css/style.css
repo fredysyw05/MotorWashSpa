@@ -555,3 +555,53 @@ button {
     transform: translateY(0); /* Regresa a su posición original al hundirse */
     box-shadow: 0 2px 5px rgba(230, 0, 0, 0.2);
 }
+
+.login-box {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    color: #333;
+}
+
+.login-box h2 {
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.error-msg {
+    color: #ff4d4d;
+    background: #ffe6e6;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+

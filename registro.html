@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Wash Spa | Registro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/casco.png" type="image/png">
+</head>
+
+<body>
+
+    <!-- HEADER UNIFICADO -->
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Motor Wash Spa">
+            </a>
+            <nav class="site-nav" id="navbar">
+                <ul>
+                    <li><a href="index.html">🏠︎Inicio</a></li>
+                    <li><a href="services.html">✨Servicios</a></li>
+                    <li><a href="reservations.html">📅Reservas</a></li>
+                    <li><a href="gallery.html">📸Galería</a></li>
+                    <li><a href="about.html">📣Acerca de</a></li>
+                    <li><a href="contact.html">📩Contacto</a></li>
+                    <li id="auth-nav-item"><a href="login.html" class="nav-login-btn">🚀Entrar/Registro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- SECCIÓN DE REGISTRO -->
+    <section class="contact section bg-light">
+        <div class="container" style="max-width: 500px;">
+            <h2 style="text-align: center;">Crear Cuenta</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">Únete para gestionar tus reservas y
+                servicios a domicilio</p>
+
+            <form id="registro-form" class="contact-form">
+                <input type="text" id="reg-nombre" placeholder="Nombre completo" required>
+                <input type="email" id="reg-correo" placeholder="Correo electrónico" required>
+                <input type="tel" id="reg-telefono" placeholder="Teléfono / WhatsApp (Ej: 3001234567)" required>
+                <input type="text" id="reg-direccion"
+                    placeholder="Dirección de residencia (Para recogida de vehículos)">
+                <div class="password-wrapper" style="position: relative; width: 100%;">
+                    <input type="password" id="reg-password" placeholder="Crea una contraseña segura" required
+                        style="width: 100%; padding-right: 40px;">
+                    <span id="toggle-pass-1"
+                        style="position: absolute; right: 12px; top: 35%; transform: translateY(-50%); cursor: pointer; font-size: 1.2rem; user-select: none;">👁️</span>
+                </div>
+                <div class="password-wrapper" style="position: relative; width: 100%; margin-top: 10px;">
+                    <input type="password" id="reg-confirm-password" placeholder="Confirma tu contraseña" required
+                        style="width: 100%; padding-right: 40px;">
+                    <span id="toggle-pass-2"
+                        style="position: absolute; right: 12px; top: 35%; transform: translateY(-50%); cursor: pointer; font-size: 1.2rem; user-select: none;">👁️</span>
+                </div>
+                <!-- 🛡️ DECLARACIÓN DE PRIVACIDAD (HABEAS DATA) -->
+                <div class="privacy-container"
+                    style="display: flex; align-items: flex-start; gap: 10px; margin: 15px 0; text-align: left;">
+                    <input type="checkbox" id="reg-privacidad" required style="margin-top: 4px; width: auto;">
+                    <label for="reg-privacidad" style="font-size: 0.85rem; color: #555;">
+                        Acepto la <a href="privacidad.html" target="_blank"
+                            style="color: #3498db; text-decoration: underline;">Política de Tratamiento de Datos</a> y
+                        autorizo el envío de notificaciones de servicio y promociones.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Registrarse</button>
+            </form>
+
+            <p id="registro-mensaje" style="margin-top: 15px; font-weight: bold; text-align: center;"></p>
+
+            <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+                ¿Ya tienes una cuenta? <a href="login.html" style="color: #3498db; font-weight: bold;">Inicia sesión
+                    aquí</a>
+            </p>
+        </div>
+    </section>
+
+    <script src="js/registro.js"></script>
+</body>
+
+</html>

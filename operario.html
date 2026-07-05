@@ -6,13 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motor Wash Spa | Panel Operario</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/casco.png" type="image/png">
 </head>
 
 <body>
     <header class="site-header">
         <div class="container header-content">
             <span class="logo" style="color: white; font-weight: bold;">Panel de Trabajo (Operadores)</span>
-            <button id="btn-cerrar-sesion" class="btn btn-danger">Cerrar Sesión</button>
+
+            <!-- 🌐 BOTÓN DE ESCAPE Y CERRAR SESIÓN JUNTO -->
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <a href="index.html" style="color: #ccc; text-decoration: none; font-size: 0.9rem;">↩Volver al
+                    Inicio</a>
+                <button id="btn-cerrar-sesion" class="btn btn-danger">Cerrar Sesión</button>
+            </div>
         </div>
     </header>
 
@@ -25,12 +32,12 @@
                 <table class="tabla-servicios" style="width: 100%; border-collapse: collapse; background: white;">
                     <thead>
                         <tr style="background-color: #333; color: white; text-align: left;">
-                            <th style="padding: 12px;">Hora</th>
-                            <th style="padding: 12px;">Fecha</th>
-                            <th style="padding: 12px;">Cliente</th>
-                            <th style="padding: 12px;">Servicio</th>
-                            <th style="padding: 12px;">Estado</th>
-                            <th style="padding: 12px; text-align: center;">Acciones</th>
+                            <th style="padding: 12px;">⏰Hora</th>
+                            <th style="padding: 12px;">📅Fecha</th>
+                            <th style="padding: 12px;">👤Cliente</th>
+                            <th style="padding: 12px;">✨Servicio</th>
+                            <th style="padding: 12px;">🚦Estado</th>
+                            <th style="padding: 12px; text-align: center;">⌛Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="lista-tareas">
