@@ -149,14 +149,17 @@ header {
   margin-bottom: 2rem;
 }
 
-/* BOTONES */
+/* BOTONES GENERALES */
 .btn {
   display: inline-block;
-  padding: 0.8rem 2rem;
+  padding: 0.6rem 1.6rem;
   border-radius: 50px;
   text-decoration: none;
   font-weight: bold;
-  transition: 0.3s;
+  border: none;
+  cursor: pointer;
+  /* Transición unificada */
+  transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary {
@@ -165,9 +168,14 @@ header {
 }
 
 .btn-primary:hover {
-  background-color: #0A4C80;
-  transform: scale(1.05);
-  box-shadow: 0 8px 18px rgba(10, 76, 128, 0.25);
+  background-color: #2b67be;
+  transform: translateY(-2px); /* Unificado a flotar en lugar de escalar */
+  box-shadow: 0 6px 15px rgba(59, 125, 216, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(59, 125, 216, 0.2);
 }
 
 /* SECCIONES */
@@ -448,160 +456,391 @@ button {
     display: block;
   }
 }
+
 /* ==========================================
    ESTILOS Y ANIMACIONES PARA EL PANEL DE OPERARIOS
    ========================================== */
 
 /* Estilo base para los botones de acción en la tabla */
 .btn-action {
-    padding: 6px 14px;
-    font-size: 0.85em;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    /* Misma transición fluida de tu plantilla */
-    transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+  padding: 6px 14px;
+  font-size: 0.85em;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  /* Misma transición fluida de tu plantilla */
+  transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
 }
 
 /* Botón Iniciar (Verde) */
 .btn-success {
-    background-color: #28a745;
-    color: white;
+  background-color: #28a745;
+  color: white;
 }
 
 .btn-success:hover:not([disabled]) {
-    background-color: #218838;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
 /* Botón Terminar (Azul) */
 .btn-info {
-    background-color: #007bff;
-    color: white;
+  background-color: #007bff;
+  color: white;
 }
 
 .btn-info:hover {
-    background-color: #0069d9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  background-color: #0069d9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
 /* Estado cuando el botón está PRESIONADO (Active) */
 .btn-action:active:not([disabled]) {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 /* ESTADO DESHABILITADO (Cuando el operario está ocupado) */
 .btn-action:disabled {
-    background-color: #6c757d; /* Gris opaco */
-    color: #e2e2e2;
-    opacity: 0.6;
-    cursor: not-allowed; /* Cambia el cursor a un símbolo de bloqueo */
-    transform: none !important;
-    box-shadow: none !important;
+  background-color: #6c757d;
+  /* Gris opaco */
+  color: #e2e2e2;
+  opacity: 0.6;
+  cursor: not-allowed;
+  /* Cambia el cursor a un símbolo de bloqueo */
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* DISEÑO DE LAS ETIQUETAS DE ESTADO (BADGES) */
 .badge-pendiente {
-    background: #ffeeba;
-    color: #856404;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    font-weight: 500;
+  background: #ffeeba;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
 }
 
 .badge-en-curso {
-    background: #b8daff;
-    color: #004085;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    font-weight: 500;
-    animation: palpitar 2s infinite; /* Pequeño efecto visual de actividad */
+  background: #b8daff;
+  color: #004085;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+  animation: palpitar 2s infinite;
+  /* Pequeño efecto visual de actividad */
 }
 
 @keyframes palpitar {
-    0% { opacity: 1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
+
 /* ==========================================
-   ESTILOS Y ANIMACIONES: BOTÓN CERRAR SESIÓN
+   BOTÓN CERRAR SESIÓN (UNIFICADO)
    ========================================== */
 .btn-danger {
-    background-color: #ff4d4d; /* Rojo base llamativo */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    /* Animación fluida: dura 0.3s el color y 0.2s el movimiento */
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  border-radius: 50px; /* Bordes redondeados consistentes con .btn */
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Efecto al pasar el cursor (Hover) */
 .btn-danger:hover {
-    background-color: #e60000; /* Un rojo más oscuro y serio */
-    transform: translateY(-2px); /* Se eleva sutilmente 2 píxeles */
-    box-shadow: 0 4px 12px rgba(230, 0, 0, 0.35); /* Un resplandor rojo elegante abajo */
+  background-color: #e60000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 77, 77, 0.4);
 }
 
-/* Efecto al hacer clic (Active) */
 .btn-danger:active {
-    transform: translateY(0); /* Regresa a su posición original al hundirse */
-    box-shadow: 0 2px 5px rgba(230, 0, 0, 0.2);
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(255, 77, 77, 0.2);
 }
 
 .login-box {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    max-width: 400px;
-    width: 100%;
-    margin: 0 auto;
-    color: #333;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  color: #333;
 }
 
 .login-box h2 {
-    margin-bottom: 10px;
-    color: #111;
+  margin-bottom: 10px;
+  color: #111;
 }
 
 .form-group {
-    margin-bottom: 20px;
-    text-align: left;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
 .btn-block {
-    width: 100%;
-    margin-top: 10px;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .error-msg {
-    color: #ff4d4d;
-    background: #ffe6e6;
-    padding: 10px;
-    border-radius: 4px;
-    margin-top: 15px;
-    font-size: 0.9rem;
+  color: #ff4d4d;
+  background: #ffe6e6;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 0.9rem;
 }
 
+/* ==========================================
+   NUEVOS DETALLES PARA TARJETAS DE SERVICIOS
+   ========================================== */
+
+/* Contenedor relativo para la imagen para posicionar el badge de manera absoluta */
+.image-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Badges modernos flotantes sobre las fotos */
+.badge-tag {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: #3B7DD8;
+  /* Azul primario de tu paleta */
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Badges de color personalizado según categoría */
+.badge-tag.badge-premium {
+  background-color: #9b59b6;
+  /* Un morado sofisticado */
+}
+
+.badge-tag.badge-vip {
+  background-color: #f1c40f;
+  /* Dorado metalizado */
+  color: #111;
+}
+
+/* Reemplaza los rellenos por defecto para darle espacio interno estructurado */
+.card-body-content {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body-content h3 {
+  padding: 0 !important;
+  margin-bottom: 0.4rem;
+  color: #0A4C80;
+  font-size: 1.35rem;
+}
+
+.card-body-content p {
+  padding: 0 !important;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.45;
+  min-height: 55px;
+  /* Mantiene la misma altura en las tarjetas */
+}
+
+/* Caja del precio formateado colombiano */
+.price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px dashed #eee;
+}
+
+.price-lbl {
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.price-val {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #28a745;
+  /* Verde éxito igual a tus botones del panel */
+}
+
+.price-cop {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Botón de Reservar elegante dentro de la tarjeta */
+.card-btn-cta {
+  display: block;
+  text-align: center;
+  background-color: #0A4C80;
+  /* El azul oscuro del encabezado */
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+/* El botón se activa cuando se pasa el mouse por encima de toda la tarjeta */
+.service-card:hover .card-btn-cta {
+  background-color: #3B7DD8;
+  /* Se vuelve azul claro dinámicamente */
+}
+
+/* ==========================================
+   PLACA PARTICULAR COLOMBIANA REALISTA
+   ========================================== */
+.placa-colombiana {
+  background-color: #FBCD18; /* Amarillo tránsito exacto */
+  color: #000000;
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+  font-weight: 900;
+  font-size: 1.3rem; /* Subimos un poco para dar espacio a la etiqueta inferior */
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  
+  /* Usamos flexbox para apilar el texto de la placa y "COLOMBIA" verticalmente */
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  padding: 6px 16px 3px 16px; /* Ajustamos márgenes internos */
+  border-radius: 6px;
+  border: 2px solid #000000; 
+  box-shadow: inset 0 0 0 2px #FBCD18, inset 0 0 0 3.5px #000000; 
+  filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.15));
+  line-height: 1;
+}
+
+/* El truco mágico: Agrega "COLOMBIA" abajo de forma automática y realista */
+.placa-colombiana::after {
+  content: "COLOMBIA";
+  font-size: 0.48rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2); /* Línea divisoria muy fina */
+  padding-top: 2px;
+  width: 100%;
+  text-align: center;
+  opacity: 0.85;
+}
+/* Efecto hover interactivo para el nombre del usuario en el menú */
+.user-name-link:hover {
+  color: #3B7DD8 !important; /* Cambia dinámicamente al azul de tu marca */
+  text-shadow: 0 0 8px rgba(59, 125, 216, 0.3); /* Brillo sutil */
+}
+
+/* ==========================================
+   COMPONENTES DE USUARIO DINÁMICOS EN HEADER
+   ========================================== */
+
+/* Alineación del grupo de autenticación */
+.user-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 🛠️ Botón "Panel de Trabajo" (Estilo píldora transparente refinado) */
+.btn-panel-link {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 0.85rem;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50px;
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-panel-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.15);
+}
+
+.btn-panel-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.05);
+}
+
+/* 👨🏻‍💼 Botón "Nombre del Cliente" (Estilo píldora con acento de marca) */
+.user-name-link {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-name-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #FBCD18 !important; /* Brillo con el amarillo de la placa colombiana */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(251, 205, 24, 0.3);
+}
+
+.user-name-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(251, 205, 24, 0.1);
+}

@@ -12,21 +12,22 @@ if (!registroForm) {
         const correo = document.getElementById('reg-correo').value.trim();
         const telefono = document.getElementById('reg-telefono').value.trim();
         const direccion = document.getElementById('reg-direccion').value.trim();
+        const placa = document.getElementById('reg-placa').value.trim().toUpperCase();
         const password = document.getElementById('reg-password').value;
         const confirmPassword = document.getElementById('reg-confirm-password').value; // 🔥 Capturado
         const contenedorMensaje = document.getElementById('registro-mensaje');
 
-        // Limpiamos mensajes anteriores si existen
+        // Limpieza de mensajes anteriores
         contenedorMensaje.innerText = '';
 
-        // 🛑 NUEVA VALIDACIÓN: Detener el envío si las claves no coinciden
+        // 🛑VALIDACIÓN: Detener el envío si las claves no coinciden
         if (password !== confirmPassword) {
             contenedorMensaje.style.color = 'red';
             contenedorMensaje.innerText = '⚠️ Las contraseñas ingresadas no coinciden. Por favor, verifícalas.';
             return; // Corta la ejecución aquí mismo y no envía nada al backend
         }
+        // 👇 COLOQUEMOS ESTE DETECTOR AQUÍ
         try {
-            // 2. Enviamos los datos al backend usando la IP directa para evitar bloqueos en Nobara
             const respuesta = await fetch('http://127.0.0.1:3000/api/usuarios/registro', {
                 method: 'POST',
                 headers: {
@@ -37,29 +38,30 @@ if (!registroForm) {
                     correo: correo,
                     telefono: telefono,
                     direccion: direccion,
-                    password: password
+                    password: password,
+                    placa: placa || null
                     // El rol no se envía; el backend lo asignará como 'cliente' por defecto
                 })
             });
 
             const datos = await respuesta.json();
 
-            // 3. Evaluamos la respuesta del servidor Node.js
+            //Evaluamos la respuesta del servidor Node.js
             if (respuesta.ok) {
                 contenedorMensaje.style.color = 'green';
                 // Dejamos un mensaje claro sobre el estándar de verificación por correo
                 contenedorMensaje.innerHTML = `✨ ¡Registro exitoso, ${nombre}!<br>Te hemos enviado un correo de verificación. Por favor revisa tu bandeja de entrada.`;
 
-                // Deshabilitamos el botón para evitar múltiples envíos accidentales
+                // Se deshabila el botón para evitar múltiples envíos accidentales
                 registroForm.querySelector('button[type="submit"]').disabled = true;
 
-                // 4. Redirección estratégica al login tras 3.5 segundos para que alcancen a leer el aviso
+                //Redirección estratégica al login tras 3.5 segundos despues del aviso.
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 3500);
 
             } else {
-                // Si el backend responde con un error (ej: Correo ya registrado)
+                // Respuesta del backend (Correo ya registrado)
                 contenedorMensaje.style.color = 'red';
                 contenedorMensaje.innerText = datos.error || 'No se pudo completar el registro.';
             }
@@ -73,28 +75,25 @@ if (!registroForm) {
         }
     });
 }
-
-// ======= LÓGICA PARA MOSTRAR / OCULTAR CONTRASEÑAS =======
-
-// Función reutilizable para alternar la visibilidad
+// Función reutilizable para alternar la visibilidad de las contraseñas.
 function configurarTogglePassword(idBoton, idInput) {
     const botonOjo = document.getElementById(idBoton);
     const inputPass = document.getElementById(idInput);
 
     if (botonOjo && inputPass) {
         botonOjo.addEventListener('click', () => {
-            // Evaluamos el tipo actual y lo cambiamos al opuesto
+            // Se evalua el tipo actual y se cambia al opuesto
             if (inputPass.type === 'password') {
                 inputPass.type = 'text';
-                botonOjo.innerText = '🙈'; // Cambia el ojo por el monito ocultándose
+                botonOjo.innerText = '🙈';
             } else {
                 inputPass.type = 'password';
-                botonOjo.innerText = '👁️'; // Vuelve al ojo normal
+                botonOjo.innerText = '👁️';
             }
         });
     }
 }
 
-// Activamos la función para ambos campos de la interfaz
+// Activacion de la función para ambos campos de la interfaz
 configurarTogglePassword('toggle-pass-1', 'reg-password');
 configurarTogglePassword('toggle-pass-2', 'reg-confirm-password');

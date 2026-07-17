@@ -33,8 +33,7 @@ app.get('/api/servicios', async (req, res) => {
 // RUTA: Registro de Usuarios
 // ==========================================
 app.post('/api/usuarios/registro', async (req, res) => {
-    // Capturamos los nuevos campos que vienen del frontend
-    const { nombre, correo, password, telefono, direccion } = req.body;
+    const { nombre, correo, password, telefono, direccion, placa } = req.body;
 
     if (!nombre || !correo || !password || !telefono) {
         return res.status(400).json({ error: 'Faltan campos obligatorios para el registro.' });
@@ -43,16 +42,21 @@ app.post('/api/usuarios/registro', async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const passwordEncriptado = await bcrypt.hash(password, salt);
-
-        // 🔑 Generamos un token aleatorio único de 64 caracteres hex
         const tokenVerificacion = crypto.randomBytes(32).toString('hex');
+        //consulta SQL
+        const sql = `INSERT INTO usuarios (nombre, correo, password, telefono, direccion, placa, rol, verificado, token_verificacion) 
+                    VALUES (?, ?, ?, ?, ?, ?, 'cliente', FALSE, ?)`;
 
-        // Insertamos los nuevos datos. Nota que 'verificado' se pone en FALSE por defecto en la DB
-        const sql = `INSERT INTO usuarios (nombre, correo, password, telefono, direccion, rol, verificado, token_verificacion) 
-                    VALUES (?, ?, ?, ?, ?, 'cliente', FALSE, ?)`;
-
-        await db.query(sql, [nombre, correo, passwordEncriptado, telefono, direccion || null, tokenVerificacion]);
-
+        //arreglo de parámetros
+        await db.query(sql, [
+            nombre,
+            correo,
+            passwordEncriptado,
+            telefono,
+            direccion || null,
+            placa ? placa.toUpperCase() : null, // Nos aseguramos de que se guarde en mayúsculas
+            tokenVerificacion
+        ]);
         // 📧 SIMULACIÓN DE ENVÍO DE CORREO (Próximamente con Nodemailer)
         const enlaceVerificacion = `http://127.0.0.1:3000/api/usuarios/verificar?token=${tokenVerificacion}`;
 
@@ -74,7 +78,7 @@ app.post('/api/usuarios/registro', async (req, res) => {
 });
 
 // ==========================================
-// ENDPOINT OPTIMIZADO: Verificar Cuenta (Inmune a Doble Petición)
+// ENDPOINT: Verificar Cuenta (Inmune a Doble Petición)
 // ==========================================
 app.get('/api/usuarios/verificar', async (req, res) => {
     const { token } = req.query;
@@ -84,13 +88,11 @@ app.get('/api/usuarios/verificar', async (req, res) => {
     }
 
     try {
-        // 1. Buscamos al usuario por el token
+        //Busqueda del usuario por el token
         const [usuarios] = await db.query('SELECT * FROM usuarios WHERE token_verificacion = ?', [token]);
 
-        // 🔍 Si no se encuentra, podría ser la segunda petición fantasma del navegador
+        //Si no se encuentra, podría ser la segunda petición fantasma del navegador
         if (usuarios.length === 0) {
-            // No hacemos nada drástico, simplemente asumimos que ya se procesó con éxito 
-            // y le mostramos la pantalla de bienvenida para no confundir al cliente.
             return res.send(`
                 <div style="text-align: center; font-family: sans-serif; margin-top: 50px;">
                     <h1 style="color: #2ecc71;">✨ ¡Cuenta Lista! ✨</h1>
@@ -101,8 +103,6 @@ app.get('/api/usuarios/verificar', async (req, res) => {
                 </div>
             `);
         }
-
-        // 2. Si es la primera petición, hacemos el flujo normal de activación
         await db.query('UPDATE usuarios SET verificado = TRUE, token_verificacion = NULL WHERE id = ?', [usuarios[0].id]);
 
         res.send(`
@@ -122,7 +122,7 @@ app.get('/api/usuarios/verificar', async (req, res) => {
 });
 
 // ==========================================
-// ENDPOINT OPTIMIZADO: Inicio de Sesión (Login)
+// ENDPOINT: Inicio de Sesión (Login)
 // ==========================================
 app.post('/api/usuarios/login', async (req, res) => {
     const { correo, password } = req.body;
@@ -152,7 +152,6 @@ app.post('/api/usuarios/login', async (req, res) => {
         if (!usuario.verificado) {
             return res.status(403).json({ error: 'Tu cuenta aún no ha sido activada. Por favor, revisa tu correo electrónico.' });
         }
-
         // 🔐 CHECKPOINT 4: Antes de comparar con Bcrypt
         console.log("🔐 [CHECKPOINT 4] Iniciando comparación de contraseña con Bcrypt...");
 
@@ -204,23 +203,21 @@ app.post('/api/usuarios/recuperar', async (req, res) => {
     }
 
     try {
-        // 1. Verificamos si el usuario existe en la DB
+        // 1. Verificación ¿el usuario existe en la DB?
         const [usuarios] = await db.query('SELECT * FROM usuarios WHERE correo = ?', [correo]);
 
         if (usuarios.length === 0) {
-            // Por estándar de seguridad, no le decimos al frontend si el correo existe o no
-            // para evitar rastreos de cuentas, pero devolvemos éxito simulado.
             return res.status(200).json({ mensaje: 'Proceso ejecutado.' });
         }
 
         // 2. Generamos un token temporal único de recuperación
         const tokenRecuperacion = crypto.randomBytes(32).toString('hex');
 
-        // 3. Lo guardamos en la columna de la base de datos para ese usuario
+        // 3. Se guarda en la columna de la base de datos para ese usuario
         await db.query('UPDATE usuarios SET token_recuperacion = ? WHERE id = ?', [tokenRecuperacion, usuarios[0].id]);
 
         // 4. 📨 SIMULACIÓN DE ENVÍO DE CORREO DE RECUPERACIÓN
-        // Apunta a tu puerto 5500 de Live Server donde crearemos la vista para cambiar la clave
+        // Apunta al puerto 5500 de Live Server donde se crea la vista para cambiar la clave
         const enlaceRecuperacion = `http://127.0.0.1:5500/restablecer-password.html?token=${tokenRecuperacion}`;
 
         console.log("\n==================================================================");
@@ -357,6 +354,73 @@ app.put('/api/operario/reservas/:id', verificarToken, async (req, res) => {
     }
 });
 
+// ==========================================
+// ENDPOINT: Obtener Información del Panel de Usuario
+// ==========================================
+// NOTA: Asegúrate de tener tu middleware de verificación de JWT listo (ej. verificarToken)
+app.get('/api/usuarios/mi-panel', verificarToken, async (req, res) => {
+    const usuarioId = req.usuario.id; // Obtenido del token JWT decodificado
+
+    try {
+        // 1. Buscar los datos personales del usuario
+        const [usuarios] = await db.query(
+            'SELECT id, nombre, correo, telefono, direccion, placa FROM usuarios WHERE id = ?',
+            [usuarioId]
+        );
+
+        if (usuarios.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        // 2. Buscar el historial y citas pendientes del usuario
+        // Unimos con la tabla de servicios para sacar nombres y precios de lo agendado
+        const sqlReservas = `
+            SELECT r.id, r.fecha_reserva AS fecha, r.hora_reserva AS hora, r.estado, s.nombre_servicio AS servicio_nombre, s.precio
+            FROM reservas r
+            JOIN servicios s ON r.servicio_id = s.id
+            WHERE r.usuario_id = ?
+            ORDER BY r.fecha_reserva DESC, r.hora_reserva DESC
+        `;
+        const [reservas] = await db.query(sqlReservas, [usuarioId]);
+
+        // 3. Responder con el paquete estructurado
+        res.status(200).json({
+            perfil: usuarios[0],
+            reservas: reservas
+        });
+
+    } catch (error) {
+        console.error('Error al obtener datos del panel:', error);
+        res.status(500).json({ error: 'Error interno del servidor al procesar el panel.' });
+    }
+});
+
+// ==========================================
+// ENDPOINT: Cancelar Reserva por el Cliente
+// ==========================================
+app.put('/api/reservas/cancelar/:id', verificarToken, async (req, res) => {
+    const citaId = req.params.id;
+    const usuarioId = req.usuario.id;
+
+    try {
+        // 1. Validar que la cita pertenezca al usuario antes de permitirle cancelarla (Protección extra)
+        const [citas] = await db.query('SELECT * FROM reservas WHERE id = ? AND usuario_id = ?', [citaId, usuarioId]);
+
+        if (citas.length === 0) {
+            return res.status(404).json({ error: 'Cita no encontrada o no autorizada.' });
+        }
+
+        // 2. Cambiar el estado a "cancelado"
+        await db.query('UPDATE reservas SET estado = "cancelado" WHERE id = ?', [citaId]);
+
+        console.log(`❌ [RESERVAS] Cita ID ${citaId} cancelada por el usuario ID: ${usuarioId}`);
+        res.status(200).json({ mensaje: 'Cita cancelada correctamente.' });
+
+    } catch (error) {
+        console.error('Error al cancelar cita:', error);
+        res.status(500).json({ error: 'Error al procesar la cancelación.' });
+    }
+});
 // 🏁 EL SERVIDOR SE ENCIENDE AL FINAL DE TODO EL ARCHIVO
 app.listen(PORT, () => {
     console.log(`🚀 Servidor de Motor Wash Spa corriendo con éxito en http://127.0.0.1:${PORT}`);

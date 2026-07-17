@@ -44,6 +44,8 @@
                 <input type="tel" id="reg-telefono" placeholder="Teléfono / WhatsApp (Ej: 3001234567)" required>
                 <input type="text" id="reg-direccion"
                     placeholder="Dirección de residencia (Para recogida de vehículos)">
+                <input type="text" id="reg-placa" placeholder="Placa del vehículo (Ej: ABC123)" maxlength="7"
+                    style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
                 <div class="password-wrapper" style="position: relative; width: 100%;">
                     <input type="password" id="reg-password" placeholder="Crea una contraseña segura" required
                         style="width: 100%; padding-right: 40px;">

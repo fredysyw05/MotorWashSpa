@@ -18,27 +18,27 @@ if (token && userName && authNavItem) {
 
   // 👥 Evaluamos el rol: El botón de panel SOLO se genera si es 'operario' o 'admin'
   const botonPanelHtml = (userRol === 'operario' || userRol === 'admin')
-    ? `<a href="operario.html" class="btn-panel-link" style="color: #ffffff; font-weight: bold; text-decoration: none;">
+    ? `<a href="operario.html" class="btn-panel-link">
         🛠️ Panel de Trabajo
        </a>`
-    : ''; // Si es 'cliente', este bloque se queda completamente vacío e invisible
+    : ''; // Si es 'cliente', se queda vacío
 
-  // Inyectamos el HTML dinámico estructurado
+  // Inyectamos el HTML limpio (¡sin inline styles que bloqueen el CSS!)
   authNavItem.innerHTML = `
-    <div class="user-nav-group" style="display: flex; align-items: center; gap: 15px;">
-      ${botonPanelHtml} <!-- Aquí se renderiza el botón o la nada, dependiendo del rol -->
+    <div class="user-nav-group">
+      ${botonPanelHtml}
       
-      <span class="user-name-tag" style="color: #fff; font-size: 0.90rem;">
+      <a href="cliente.html" class="user-name-link">
         👨🏻‍💼 ${userName}
-      </span>
+      </a>
       
-      <button id="nav-logout-btn" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem; font-weight: bold; cursor: pointer; margin-left: 5px;">
+      <button id="nav-logout-btn" class="btn-danger">
         Cerrar Sesión
       </button>
     </div>
   `;
 
-  // Lógica para cerrar sesión desde el menú de cualquier página pública
+  // Lógica para cerrar sesión
   document.getElementById('nav-logout-btn').addEventListener('click', (e) => {
     e.preventDefault();
     localStorage.clear();
