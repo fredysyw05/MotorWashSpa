@@ -148,6 +148,10 @@ app.post('/api/usuarios/login', async (req, res) => {
         }
 
         const usuario = rows[0];
+
+        if (!usuario.password) {
+            return res.status(401).json({ error: 'Credenciales incorrectas (Este usuario no tiene acceso digital)' });
+        }
         // 🛑 VALIDACIÓN DE SEGURIDAD: ¿El usuario ya activó su cuenta?
         if (!usuario.verificado) {
             return res.status(403).json({ error: 'Tu cuenta aún no ha sido activada. Por favor, revisa tu correo electrónico.' });
@@ -189,6 +193,271 @@ app.post('/api/usuarios/login', async (req, res) => {
         // ❌ CHECKPOINT DE ERROR
         console.error('❌ [ERROR INTERNO EN LOGIN]:', error);
         res.status(500).json({ error: 'Error interno del servidor al iniciar sesión' });
+    }
+});
+
+// ==========================================
+// RUTA ADMIN: Registrar un nuevo Operario
+// ==========================================
+app.post('/api/admin/registrar-operario', verificarToken, async (req, res) => {
+    // 🛡️ FILTRO DE SEGURIDAD: Solo el administrador puede entrar aquí
+    if (req.usuario.rol !== 'admin') {
+        return res.status(403).json({ error: 'Acceso denegado. No tienes permisos de administrador.' });
+    }
+
+    const { nombre, correo, password, telefono, direccion } = req.body;
+
+    // Validamos campos mínimos obligatorios
+    if (!nombre || !correo || !password || !telefono) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios para registrar al operario.' });
+    }
+
+    try {
+        // Encriptamos la contraseña tal cual como lo haces en el registro de clientes
+        const salt = await bcrypt.genSalt(10);
+        const passwordEncriptado = await bcrypt.hash(password, salt);
+
+        // Insertamos en la tabla usuarios, pero forzando el rol 'operario' 
+        // Y lo dejamos como VERIFICADO = TRUE de una vez, porque lo crea el jefe
+        const sql = `INSERT INTO usuarios (nombre, correo, password, telefono, direccion, rol, verificado) 
+                    VALUES (?, ?, ?, ?, ?, 'operario', TRUE)`;
+
+        await db.query(sql, [
+            nombre,
+            correo,
+            passwordEncriptado,
+            telefono,
+            direccion || null
+        ]);
+
+        console.log(`👷‍♂️ [ADMIN] Nuevo operario registrado con éxito: ${nombre} (${correo})`);
+        res.status(201).json({ mensaje: `El operario ${nombre} fue registrado correctamente.` });
+
+    } catch (error) {
+        console.error('Error al registrar operario por el admin:', error);
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({ error: 'Este correo electrónico ya está registrado en el sistema.' });
+        }
+        res.status(500).json({ error: 'Error interno del servidor al registrar al operario.' });
+    }
+});
+
+// ==========================================
+// RUTA ADMIN: Registrar Cliente Presencial (Walk-in)
+// ==========================================
+app.post('/api/admin/registrar-cliente', verificarToken, async (req, res) => {
+    // 🛡️ FILTRO DE SEGURIDAD: Reutilizamos tu lógica exacta
+    if (req.usuario.rol !== 'admin') {
+        return res.status(403).json({ error: 'Acceso denegado. No tienes permisos de administrador.' });
+    }
+
+    const { nombre, telefono, correo, placa, direccion } = req.body;
+
+    // Validamos campos mínimos obligatorios para el negocio físico
+    if (!nombre || !telefono) {
+        return res.status(400).json({ error: 'El nombre y el teléfono son obligatorios para el registro presencial.' });
+    }
+
+    try {
+        // 🔍 VERIFICACIÓN DE EXISTENCIA: ¿Ya existe esta placa o teléfono en tu tabla usuarios?
+        // Validamos la placa solo si el admin la ingresó
+        const placaBuscar = placa ? placa.toUpperCase() : null;
+
+        const [existente] = await db.query(
+            'SELECT id, nombre, placa, telefono FROM usuarios WHERE telefono = ? OR (placa = ? AND placa IS NOT NULL)',
+            [telefono, placaBuscar]
+        );
+
+        if (existente.length > 0) {
+            const coincidencia = existente[0];
+            if (placaBuscar && coincidencia.placa === placaBuscar) {
+                return res.status(400).json({ error: `El vehículo con placas [${placaBuscar}] ya está registrado a nombre de ${coincidencia.nombre}.` });
+            }
+            if (coincidencia.telefono === telefono) {
+                return res.status(400).json({ error: `El teléfono ${telefono} ya está asignado al cliente ${coincidencia.nombre}.` });
+            }
+        }
+
+        // 📝 Usuarios registrados por el admin
+        // password queda NULL o vacío porque este cliente no entra por login de aplicación
+        const sql = `INSERT INTO usuarios (nombre, correo, password, telefono, direccion, placa, rol, verificado) 
+                    VALUES (?, ?, NULL, ?, ?, ?, 'cliente', TRUE)`;
+
+        await db.query(sql, [
+            nombre,
+            correo || null, // Opcional
+            telefono,
+            direccion || null, // Opcional
+            placaBuscar // Guardado limpio en mayúsculas
+        ]);
+
+        console.log(`👤 [ADMIN] Cliente presencial registrado: ${nombre} | Vehículo: [${placaBuscar || 'Ninguno'}]`);
+        res.status(201).json({ mensaje: `¡Cliente ${nombre} registrado con éxito en Motor Wash!` });
+
+    } catch (error) {
+        console.error('❌ Error al registrar cliente presencial por el admin:', error);
+
+        // Control extra por si el correo (si se ingresó) ya existe en otro usuario de la app
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({ error: 'Este correo electrónico ya pertenece a un usuario registrado.' });
+        }
+
+        res.status(500).json({ error: 'Error interno del servidor al procesar el alta del cliente.' });
+    }
+});
+
+// ==========================================
+// RUTA ADMIN: Métricas del Tablero de Resumen
+// ==========================================
+app.get('/api/admin/resumen', verificarToken, async (req, res) => {
+    // 🛡️ Filtro de seguridad obligatorio
+    if (req.usuario.rol !== 'admin') {
+        return res.status(403).json({ error: 'Acceso denegado. No tienes permisos de administrador.' });
+    }
+
+    try {
+        // Se Definen los queries analíticos
+
+        // 1. Ingresos y servicios completados el día de HOY
+        const queryHoy = `
+            SELECT 
+                COUNT(r.id) AS servicios_hoy,
+                IFNULL(SUM(s.precio), 0) AS ingresos_hoy
+            FROM reservas r
+            JOIN servicios s ON r.servicio_id = s.id
+            WHERE r.fecha_reserva = CURDATE() AND r.estado = 'finalizado'
+        `;
+
+        // 2. Estado de la operación en tiempo real (Carga de trabajo para HOY)
+        const queryOperacion = `
+            SELECT 
+                SUM(CASE WHEN estado = 'pendiente' THEN 1 ELSE 0 END) AS pendientes_hoy,
+                SUM(CASE WHEN estado = 'en curso' THEN 1 ELSE 0 END) AS en_curso_hoy
+            FROM reservas
+            
+        `;
+
+        // 3. Los 3 servicios más vendidos en la historia de Motor Wash (Para el Top)
+        const queryTopServicios = `
+            SELECT s.nombre_servicio, COUNT(r.id) AS total_ventas
+            FROM reservas r
+            JOIN servicios s ON r.servicio_id = s.id
+            WHERE r.estado = 'finalizado'
+            GROUP BY s.id, s.nombre_servicio
+            ORDER BY total_ventas DESC
+            LIMIT 3
+        `;
+
+        // 4. Contador general de la comunidad de Motor Wash Spa
+        const queryComunidad = `
+            SELECT 
+                SUM(CASE WHEN rol = 'cliente' THEN 1 ELSE 0 END) AS total_clientes,
+                SUM(CASE WHEN rol = 'operario' THEN 1 ELSE 0 END) AS total_operarios
+            FROM usuarios
+        `;
+
+        const [rawHoy, rawOperacion, rawTop, rawComunidad] = await Promise.all([
+            db.query(queryHoy),
+            db.query(queryOperacion),
+            db.query(queryTopServicios),
+            db.query(queryComunidad)
+        ]);
+
+        // 2. Extraemos limpiamente el array de FILAS (rows) de cada respuesta
+        const rowsHoy = rawHoy[0];
+        const rowsOperacion = rawOperacion[0];
+        const rowsTop = rawTop[0];
+        const rowsComunidad = rawComunidad[0];
+
+        // 3. Estructuramos la respuesta usando encadenamiento opcional (?.) por seguridad
+        res.status(200).json({
+            financiero: {
+                servicios_completados_hoy: rowsHoy[0]?.servicios_hoy || 0,
+                ingresos_hoy: parseFloat(rowsHoy[0]?.ingresos_hoy) || 0
+            },
+            monitoreo_rapido: {
+                pendientes: rowsOperacion[0]?.pendientes_hoy || 0,
+                en_curso: rowsOperacion[0]?.en_curso_hoy || 0
+            },
+            top_servicios: rowsTop, // Ahora sí viaja el array de filas limpio para el .map() del front
+            comunidad: {
+                clientes_registrados: rowsComunidad[0]?.total_clientes || 0,
+                operarios_activos: rowsComunidad[0]?.total_operarios || 0
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ Error al generar métricas de administrador:', error);
+        res.status(500).json({ error: 'Error interno al recopilar las métricas del sistema.' });
+    }
+});
+
+// ==========================================
+// RUTA ADMIN: Historial Global con Filtros Dinámicos
+// ==========================================
+app.get('/api/admin/historial', verificarToken, async (req, res) => {
+    // 🛡️ Filtro de seguridad obligatorio
+    if (req.usuario.rol !== 'admin') {
+        return res.status(403).json({ error: 'Acceso denegado. No tienes permisos de administrador.' });
+    }
+
+    // Capturamos los filtros que viajen por la URL (Query Params)
+    // Ejemplo: /api/admin/historial?placa=XYZ123&estado=finalizado
+    const { placa, estado, fecha, operario_id } = req.query;
+
+    try {
+        // Consulta base: Cruzamos la reserva con el cliente, el servicio y el operario asignado
+        let sql = `
+            SELECT 
+                r.id AS reserva_id, 
+                r.fecha_reserva, 
+                r.hora_reserva, 
+                r.estado,
+                u_cli.nombre AS cliente_nombre, 
+                u_cli.telefono AS cliente_telefono,
+                u_cli.placa AS cliente_placa,
+                s.nombre_servicio, 
+                s.precio,
+                IFNULL(u_ope.nombre, 'Sin asignar') AS operario_nombre
+            FROM reservas r
+            JOIN usuarios u_cli ON r.usuario_id = u_cli.id
+            JOIN servicios s ON r.servicio_id = s.id
+            LEFT JOIN usuarios u_ope ON r.operario_id = u_ope.id
+            WHERE 1=1
+        `;
+
+        const parametros = [];
+
+        // Inyección dinámica de filtros según lo que envíe el admin
+        if (placa) {
+            sql += ` AND u_cli.placa = ?`;
+            parametros.push(placa.toUpperCase().trim());
+        }
+
+        if (estado) {
+            sql += ` AND r.estado = ?`;
+            parametros.push(estado);
+        }
+
+        if (fecha) {
+            sql += ` AND r.fecha_reserva = ?`;
+            parametros.push(fecha);
+        }
+
+        if (operario_id) {
+        sql += ` AND r.operario_id = ?`;
+        parametros.push(operario_id);
+    }
+
+        // Siempre ordenamos del más reciente al más antiguo
+        sql += ` ORDER BY r.fecha_reserva DESC, r.hora_reserva DESC`;
+
+        const [rows] = await db.query(sql, parametros);
+        res.json(rows);
+
+    } catch (error) {
+        console.error('❌ Error al consultar historial global:', error);
+        res.status(500).json({ error: 'Error interno del servidor al procesar el historial.' });
     }
 });
 
@@ -304,6 +573,26 @@ app.post('/api/reservas', verificarToken, async (req, res) => {
 });
 
 // ==========================================
+// ENDPOINT: OBTENER LISTA DE OPERARIOS
+// ==========================================
+app.get('/api/admin/operarios', verificarToken, async (req, res) => {
+    // Verificamos que sea un admin
+    if (req.usuario.rol !== 'admin') {
+        return res.status(403).json({ error: 'Acceso denegado.' });
+    }
+
+    try {
+        // Buscamos en la BD solo los usuarios que sean operarios
+        const [operarios] = await db.query(
+            "SELECT id, nombre FROM usuarios WHERE rol = 'operario' ORDER BY nombre ASC"
+        );
+        res.status(200).json(operarios);
+    } catch (error) {
+        console.error('❌ Error al obtener lista de operarios:', error);
+        res.status(500).json({ error: 'Error interno al cargar los operarios.' });
+    }
+});
+// ==========================================
 // RUTA: Obtener reservas pendientes
 // ==========================================
 app.get('/api/operario/pendientes', verificarToken, async (req, res) => {
@@ -312,7 +601,7 @@ app.get('/api/operario/pendientes', verificarToken, async (req, res) => {
     }
     try {
         const sql = `
-            SELECT r.id AS reserva_id, r.fecha_reserva, r.hora_reserva, r.estado,
+            SELECT r.id AS reserva_id, r.fecha_reserva, r.hora_reserva, r.estado, r.operario_id,
             u.nombre AS cliente_nombre, s.nombre_servicio, s.precio
             FROM reservas r
             JOIN usuarios u ON r.usuario_id = u.id
@@ -328,6 +617,83 @@ app.get('/api/operario/pendientes', verificarToken, async (req, res) => {
     }
 });
 
+// ==========================================
+// ENDPOINT: MONITOREO EN VIVO
+// ==========================================
+app.get('/api/admin/monitoreo', verificarToken, async (req, res) => {
+    if (req.usuario.rol !== 'admin') {
+        return res.status(403).json({ error: 'Acceso denegado.' });
+    }
+
+    try {
+        // Traemos solo los activos y ordenamos por estado y hora
+        const sql = `
+            SELECT 
+                r.id AS reserva_id, r.hora_reserva, r.estado, c.placa,
+                c.nombre AS cliente_nombre, 
+                s.nombre_servicio, 
+                o.nombre AS operario_nombre
+            FROM reservas r
+            JOIN usuarios c ON r.usuario_id = c.id
+            JOIN servicios s ON r.servicio_id = s.id
+            LEFT JOIN usuarios o ON r.operario_id = o.id
+            WHERE r.estado IN ('en curso', 'pendiente')
+            ORDER BY 
+                CASE r.estado 
+                    WHEN 'en curso' THEN 1 
+                    WHEN 'pendiente' THEN 2 
+                    ELSE 3 
+                END, 
+                r.hora_reserva ASC
+        `;
+        
+        const [monitoreo] = await db.query(sql);
+        res.status(200).json(monitoreo);
+    } catch (error) {
+        console.error('❌ Error en monitoreo en vivo:', error);
+        res.status(500).json({ error: 'Error al cargar el monitoreo.' });
+    }
+});
+
+// ==========================================
+// RUTA: Obtener historial de reservas (Finalizadas Canceladas, filtrar por operario)
+// ==========================================
+app.get('/api/operario/historial', verificarToken, async (req, res) => {
+    if (req.usuario.rol !== 'operario' && req.usuario.rol !== 'admin') {
+        return res.status(403).json({ error: 'Acceso denegado. No tienes permisos de operario.' });
+    }
+
+    try {
+        // 1. Dejamos la consulta base uniendo las tablas
+        let sql = `
+            SELECT r.id AS reserva_id, r.fecha_reserva, r.hora_reserva, r.estado,
+                u.nombre AS cliente_nombre, s.nombre_servicio, s.precio
+            FROM reservas r
+            JOIN usuarios u ON r.usuario_id = u.id
+            JOIN servicios s ON r.servicio_id = s.id
+            WHERE (r.estado = 'finalizado' OR r.estado = 'cancelado')
+        `;
+
+        const parametros = [];
+
+        // 🌟 EL TRUCO: Si el rol es operario, inyectamos el filtro de su ID obligatoriamente
+        if (req.usuario.rol === 'operario') {
+            sql += ` AND r.operario_id = ?`;
+            parametros.push(req.usuario.id);
+        }
+
+        // Mantenemos el orden cronológico invertido (más recientes primero)
+        sql += ` ORDER BY r.fecha_reserva DESC, r.hora_reserva DESC`;
+
+        const [rows] = await db.query(sql, parametros);
+        res.json(rows);
+
+    } catch (error) {
+        console.error('Error al obtener el historial del operario:', error);
+        res.status(500).json({ error: 'Error interno del servidor al consultar el historial.' });
+    }
+
+});
 // ==========================================
 // RUTA: Actualizar estado de una reserva
 // ==========================================
@@ -357,7 +723,6 @@ app.put('/api/operario/reservas/:id', verificarToken, async (req, res) => {
 // ==========================================
 // ENDPOINT: Obtener Información del Panel de Usuario
 // ==========================================
-// NOTA: Asegúrate de tener tu middleware de verificación de JWT listo (ej. verificarToken)
 app.get('/api/usuarios/mi-panel', verificarToken, async (req, res) => {
     const usuarioId = req.usuario.id; // Obtenido del token JWT decodificado
 

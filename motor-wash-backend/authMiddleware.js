@@ -6,7 +6,7 @@ const verificarToken = (req, res, next) => {
     // 1. Extraer la cabecera 'Authorization' enviada por el frontend
     const authHeader = req.header('Authorization');
 
-    // Si no enviaron ninguna cabecera, bloqueamos el acceso
+    // Si no envíia ninguna cabecera, se bloquea el acceso
     if (!authHeader) {
         return res.status(401).json({ error: 'Acceso denegado. No se proporcionó un token de seguridad.' });
     }

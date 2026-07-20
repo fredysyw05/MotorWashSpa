@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Wash Spa | Panel Administración</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/casco.png" type="image/png">
+    <style>
+        /* Pequeño ajuste local para ocultar/mostrar secciones de forma limpia */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* Contenedor de métricas usando tu grid existente */
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .metric-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <span class="logo" style="color: white; font-weight: bold;">Panel de Administración (Control Global)</span>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <a href="index.html" style="color: #ccc; text-decoration: none; font-size: 0.9rem;">↩ Volver al
+                    Inicio</a>
+                <button id="btn-cerrar-sesion" class="btn btn-danger">Cerrar Sesión</button>
+            </div>
+        </div>
+    </header>
+    <div style="background-color: #333; padding: 10px 0;">
+        <div class="container" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary tab-btn active" data-target="sec-resumen">📊 Resumen</button>
+            <button class="btn btn-primary tab-btn" data-target="sec-monitoreo">⚡ Monitoreo en Vivo</button>
+            <button class="btn btn-primary tab-btn" data-target="sec-personal">👷‍♂️ Registro de Personal</button>
+            <button class="btn btn-primary tab-btn" data-target="sec-clientes">👨🏻‍💼 Registro de Clientes</button>
+            <button class="btn btn-primary tab-btn" data-target="sec-reportes">📜 Historial Global</button>
+        </div>
+    </div>
+    <section class="section bg-light">
+        <div class="container">
+            <h2>Hola, Admin<span id="nombre-admin" style="color: #3B7DD8;"></span> 👑</h2>
+            <p style="margin-bottom: 30px;">Desde aquí puedes supervisar toda la operación de la estación de lavado.</p>
+
+            <!-- ==========================================
+    SECCIÓN 1: RESUMEN Y MÉTRICAS (ACTUALIZADO)
+    ========================================== -->
+            <div id="sec-resumen" class="admin-section active">
+                <h3>Métricas del Día</h3>
+
+                <!-- Bloque Financiero y Operación de Hoy -->
+                <div class="metrics-container">
+                    <div class="metric-box">
+                        <h4 style="color: #666; font-size: 0.9rem; text-transform: uppercase;">Servicios Hoy</h4>
+                        <p id="servicios-hoy" style="font-size: 2rem; font-weight: bold; color: #3B7DD8;">0</p>
+                    </div>
+                    <div class="metric-box">
+                        <h4 style="color: #666; font-size: 0.9rem; text-transform: uppercase;">Ingresos Hoy</h4>
+                        <p id="ingresos-hoy" style="font-size: 2rem; font-weight: bold; color: #28a745;">$0</p>
+                    </div>
+                    <div class="metric-box">
+                        <h4 style="color: #666; font-size: 0.9rem; text-transform: uppercase;">En Espera (Pendientes)
+                        </h4>
+                        <p id="pendientes-hoy" style="font-size: 2rem; font-weight: bold; color: #e67e22;">0</p>
+                    </div>
+                    <div class="metric-box">
+                        <h4 style="color: #666; font-size: 0.9rem; text-transform: uppercase;">Lavándose Ahora (En
+                            Curso)</h4>
+                        <p id="en-curso-hoy" style="font-size: 2rem; font-weight: bold; color: #3498db;">0</p>
+                    </div>
+                </div>
+
+                <!-- Bloque de control de la Comunidad / Negocio -->
+                <h3 style="margin-top: 30px;">Comunidad Motor Wash</h3>
+                <div class="metrics-container">
+                    <div class="metric-box">
+                        <h4 style="color: #666; font-size: 0.9rem; text-transform: uppercase;">Clientes Registrados</h4>
+                        <p id="total-clientes" style="font-size: 2rem; font-weight: bold; color: #333;">0</p>
+                    </div>
+                    <div class="metric-box">
+                        <h4 style="color: #666; font-size: 0.9rem; text-transform: uppercase;">Operarios Activos</h4>
+                        <p id="total-operarios" style="font-size: 2rem; font-weight: bold; color: #333;">0</p>
+                    </div>
+                </div>
+
+                <!-- Top Servicios Históricos -->
+                <div
+                    style="margin-top: 30px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);">
+                    <h4 style="color: #333; margin-bottom: 15px;">🔥 Top 3 Servicios Más Vendidos</h4>
+                    <ul id="top-servicios-lista" style="padding-left: 20px; line-height: 2;">
+                        <!-- Aquí caerán dinámicamente los servicios top -->
+                    </ul>
+                </div>
+            </div>
+            <!-- ==========================================
+    SECCIÓN 2: MONITOREO EN VIVO (CORREGIDO)
+    ========================================== -->
+            <div id="sec-monitoreo" class="admin-section">
+                <h3>Cola de Espera y Servicios Activos</h3>
+                <div style="overflow-x: auto; margin-top: 20px;">
+                    <table class="tabla-servicios" style="width: 100%; border-collapse: collapse; background: white;">
+                        <thead>
+                            <tr style="background-color: #333; color: white; text-align: left;">
+                                <th style="padding: 12px;">⏰ Hora</th>
+                                <th style="padding: 12px;">👨🏻‍💼 Cliente</th>
+                                <th style="padding: 12px;">✨ Servicio</th>
+                                <th style="padding: 12px;">👷‍♂️ Operario Asignado</th>
+                                <th style="padding: 12px;">🚦 Estado</th>
+                            </tr>
+                        </thead>
+                        <!-- SOLO MANTENEMOS ESTE TBODY -->
+                        <tbody id="lista-monitoreo">
+                            <!-- Los datos se inyectarán aquí automáticamente como filas <tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ELIMINAMOS EL DIV QUE ESTABA AQUÍ ABAJO -->
+            </div>
+
+            <!-- ==========================================
+                SECCIÓN 3: REGISTRO DE PERSONAL
+                ========================================== -->
+            <div id="sec-personal" class="admin-section">
+                <div class="login-box" style="margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">Registrar Nuevo Operario</h3>
+                    <form id="form-registro-operario" style="max-width: 100%;">
+                        <div class="form-group">
+                            <label>Nombre Completo</label>
+                            <input type="text" id="op-nombre" placeholder="Ej. Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Correo Electrónico</label>
+                            <input type="email" id="op-correo" placeholder="cliente@correo.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Contraseña Acceso</label>
+                            <input type="password" id="op-password" placeholder="Mínimo 6 caracteres" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono Celular</label>
+                            <input type="tel" id="op-telefono" placeholder="Ej. 3001234567" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección Residencia (Opcional)</label>
+                            <input type="text" id="op-direccion">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Dar de Alta Operario</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ==========================================
+    SECCIÓN 4: REGISTRO DE CLIENTES (PRESENCIAL)
+    ========================================== -->
+            <div id="sec-clientes" class="admin-section">
+                <div class="login-box" style="margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
+                    <h3 style="text-align: center; margin-bottom: 20px;">Registrar Cliente Nuevo (Presencial)</h3>
+                    <form id="form-registro-cliente" style="max-width: 100%;">
+                        <div class="form-group">
+                            <label>Nombre Completo</label>
+                            <input type="text" id="cl-nombre" placeholder="Ej. Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono / Celular</label>
+                            <input type="tel" id="cl-telefono" placeholder="Ej. 3001234567" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Correo Electrónico (Opcional)</label>
+                            <input type="email" id="cl-correo"
+                                placeholder="cliente@correo.com (Dejar vacío si no maneja)">
+                        </div>
+                        <div class="form-group">
+                            <label>Placa del Vehículo</label>
+                            <input type="text" id="cl-placa" placeholder="Sujeto a formato (Ej. XYZ123)" required
+                                style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección Residencia (Opcional)</label>
+                            <input type="text" id="cl-direccion" placeholder="Ej. Calle 10 # 45 - 20">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Dar de Alta Cliente</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ==========================================
+    SECCIÓN 5: HISTORIAL GLOBAL Y REPORTES (ACTUALIZADO)
+    ========================================== -->
+            <div id="sec-reportes" class="admin-section">
+                <h3>Historial Completo de Órdenes</h3>
+
+                <!-- Barra de filtros avanzada e inteligente -->
+                <div style="display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; align-items: center;">
+                    <input type="text" id="filtro-placa" placeholder="🔍Buscar Placa"
+                        style="padding: 8px; text-transform: uppercase; max-width: 180px; margin-bottom:0;">
+
+                    <select id="filtro-estado" style="padding: 10px; border-radius: 8px;">
+                        <option value="">Filtro: Todos los Estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="en curso">En Curso</option>
+                        <option value="finalizado">Finalizado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+
+                    <input type="date" id="filtro-fecha" style="padding: 8px; margin-bottom:0;">
+
+                    <select id="filtro-operario" style="padding: 10px; border-radius: 8px;">
+                        <option value="">Filtro: Todos los Operarios</option>
+                        <!-- Puedes poner ids fijos temporalmente para probar o cargarlos dinámicamente -->
+                        <option value="1">Carlos Pérez</option>
+                        <option value="2">Juan Gómez</option>
+                    </select>
+
+                    <button id="btn-filtrar" class="btn btn-primary" style="padding: 10px 20px;">Buscar</button>
+                    <button id="btn-limpiar-filtros" class="btn btn-secondary" style="padding: 10px 20px;">🔄
+                        Limpiar</button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="tabla-servicios" style="width: 100%; border-collapse: collapse; background: white;">
+                        <thead>
+                            <tr style="background-color: #555; color: white; text-align: left;">
+                                <th style="padding: 12px;">📅 Fecha / Hora</th>
+                                <th style="padding: 12px;">👨🏻‍💼 Cliente</th>
+                                <th style="padding: 12px;">✨ Vehículo</th>
+                                <th style="padding: 12px;">🧼 Servicio</th>
+                                <th style="padding: 12px;">💰 Total</th>
+                                <th style="padding: 12px;">👷‍♂️ Operario</th>
+                                <th style="padding: 12px;">🚦 Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-historial-body">
+                            <!-- Datos históricos del backend -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <script src="js/admin.js"></script>
+</body>
+
+</html>

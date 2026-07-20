@@ -12,7 +12,7 @@
 <body>
     <header class="site-header">
         <div class="container header-content">
-            <span class="logo" style="color: white; font-weight: bold;">Panel de Trabajo (Operadores)</span>
+            <span class="logo" style="color: white; font-weight: bold;">Trabajo</span>
 
             <!-- 🌐 BOTÓN DE ESCAPE Y CERRAR SESIÓN JUNTO -->
             <div style="display: flex; gap: 15px; align-items: center;">
@@ -25,9 +25,10 @@
 
     <section class="section bg-light">
         <div class="container">
-            <h2>Hola, <span id="nombre-operario">Operario</span> 🛠️</h2>
+            <h2>Hola, Operario <span id="nombre-operario" style="color: #007bff;"></span> 🛠️</h2>
             <p>Estas son las órdenes de lavado asignadas y pendientes para el día de hoy:</p>
 
+            <!-- TABLA DE TAREAS PENDIENTES / EN CURSO -->
             <div style="overflow-x: auto; margin-top: 20px;">
                 <table class="tabla-servicios" style="width: 100%; border-collapse: collapse; background: white;">
                     <thead>
@@ -44,8 +45,30 @@
                     </tbody>
                 </table>
             </div>
-
             <p id="error-tarea" style="color: red; font-weight: bold; margin-top: 15px;"></p>
+
+            <!-- 📜SECCIÓN: HISTORIAL DE TRABAJOS REALIZADOS -->
+            <div style="overflow-x: auto; margin-top: 50px;">
+                <h3 style="margin-bottom: 15px; color: #333; display: flex; align-items: center; gap: 10px;">
+                    <span>Historial de Trabajos Realizados</span> ✅
+                </h3>
+                <table class="tabla-servicios" style="width: 100%; border-collapse: collapse; background: white;">
+                    <thead>
+                        <tr style="background-color: #333; color: white; text-align: left;">
+                            <th style="padding: 12px;">⏰Hora</th>
+                            <th style="padding: 12px;">📅Fecha</th>
+                            <th style="padding: 12px;">👤Cliente</th>
+                            <th style="padding: 12px;">✨Servicio</th>
+                            <th style="padding: 12px;">🚦Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-historial">
+                        <!-- Aquí se renderizan los trabajos finalizados -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="error-historial" style="color: red; font-weight: bold; margin-top: 15px;"></p>
+
         </div>
     </section>
 

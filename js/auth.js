@@ -46,27 +46,23 @@ if (!loginForm) {
                 localStorage.setItem('token', datos.token);
                 localStorage.setItem('usuario_rol', datos.usuario.role || datos.usuario.rol);
                 localStorage.setItem('userName', datos.usuario.nombre);
+                localStorage.setItem('id', datos.usuario.id);
 
                 setTimeout(() => {
-                    if (datos.usuario.rol === 'operario') {
-                        window.location.href = 'operario.html'; // Redirección correcta corregida
+                    // Usamos una variable local para asegurar el rol sin importar si viene como 'rol' o 'role'
+                    const rolUsuario = datos.usuario.rol || datos.usuario.role;
+
+                    if (rolUsuario === 'admin') {
+                        // 🚀 Si es administrador, directo al Dashboard
+                        window.location.href = 'admin.html';
+                    } else if (rolUsuario === 'operario') {
+                        // 🔧 Si es operario, a su panel de tareas
+                        window.location.href = 'operario.html';
                     } else {
-                        // ... (Aquí guardas tu token, userName y usuario_rol en el localStorage) ...
-
-                        // 🕵️‍♂️ Leemos si venía un servicio y un motivo en la URL de login
-                        const parametrosUrl = new URLSearchParams(window.location.search);
-                        const motivo = parametrosUrl.get('motivo');
-                        const servicioId = parametrosUrl.get('service');
-
-                        if (motivo === 'reservar') {
-                            // 🔥 Si venía a reservar, lo devolvemos allá manteniendo el ID de su servicio
-                            window.location.href = servicioId ? `reservations.html?service=${servicioId}` : 'reservations.html';
-                        } else {
-                            // Si entró al login de forma normal por el menú, va al index
-                            window.location.href = 'index.html';
-                        }
+                        // 🚗 Si es un cliente común, a la página principal
+                        window.location.href = 'index.html';
                     }
-                }, 1500);
+                }, 1000); // Ajusta los milisegundos a tu gusto (1000 = 1 segundo)
 
             } else {
                 contenedorMensaje.style.color = 'red';

@@ -16,16 +16,20 @@ const userRol = localStorage.getItem('usuario_rol'); // 🔥 Recuperamos el rol 
 // Si el usuario está logueado, transformamos el menú
 if (token && userName && authNavItem) {
 
-  // 👥 Evaluamos el rol: El botón de panel SOLO se genera si es 'operario' o 'admin'
-  const botonPanelHtml = (userRol === 'operario' || userRol === 'admin')
-    ? `<a href="operario.html" class="btn-panel-link">
-        🛠️ Panel de Trabajo
-       </a>`
-    : ''; // Si es 'cliente', se queda vacío
+  // 👥 Evaluamos el rol para inyectar el botón dinámico correcto
+  let botonPanelHtml = '';
+  
+  if (userRol === 'admin') {
+      // Inyectamos el botón naranja de Dashboard si es administrador
+      botonPanelHtml = `<a href="admin.html" class="btn-panel-link" style="background: #e67e22; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">⚙️ Dashboard</a>`;
+  } else if (userRol === 'operario') {
+      // Inyectamos el botón de trabajo si es operario
+      botonPanelHtml = `<a href="operario.html" class="btn-panel-link">🛠️ Trabajo</a>`;
+  }
 
-  // Inyectamos el HTML limpio (¡sin inline styles que bloqueen el CSS!)
+  // Inyectamos el HTML al menú
   authNavItem.innerHTML = `
-    <div class="user-nav-group">
+    <div class="user-nav-group" style="display: flex; gap: 15px; align-items: center;">
       ${botonPanelHtml}
       
       <a href="cliente.html" class="user-name-link">
@@ -46,7 +50,7 @@ if (token && userName && authNavItem) {
   });
 }
 
-// Cerrar menú al hacer clic en un enlace (Captura los botones dinámicos perfectamente)
+// Cerrar menú al hacer clic en un enlace
 const navLinks = navbar.querySelectorAll('a');
 navLinks.forEach(link => {
   link.addEventListener('click', () => {

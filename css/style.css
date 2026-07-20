@@ -169,7 +169,8 @@ header {
 
 .btn-primary:hover {
   background-color: #2b67be;
-  transform: translateY(-2px); /* Unificado a flotar en lugar de escalar */
+  transform: translateY(-2px);
+  /* Unificado a flotar en lugar de escalar */
   box-shadow: 0 6px 15px rgba(59, 125, 216, 0.4);
 }
 
@@ -497,43 +498,6 @@ button {
   box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
-/* Estado cuando el botón está PRESIONADO (Active) */
-.btn-action:active:not([disabled]) {
-  transform: translateY(0);
-}
-
-/* ESTADO DESHABILITADO (Cuando el operario está ocupado) */
-.btn-action:disabled {
-  background-color: #6c757d;
-  /* Gris opaco */
-  color: #e2e2e2;
-  opacity: 0.6;
-  cursor: not-allowed;
-  /* Cambia el cursor a un símbolo de bloqueo */
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* DISEÑO DE LAS ETIQUETAS DE ESTADO (BADGES) */
-.badge-pendiente {
-  background: #ffeeba;
-  color: #856404;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-.badge-en-curso {
-  background: #b8daff;
-  color: #004085;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 500;
-  animation: palpitar 2s infinite;
-  /* Pequeño efecto visual de actividad */
-}
 
 @keyframes palpitar {
   0% {
@@ -559,7 +523,8 @@ button {
   padding: 8px 16px;
   font-weight: bold;
   font-size: 0.85rem;
-  border-radius: 50px; /* Bordes redondeados consistentes con .btn */
+  border-radius: 50px;
+  /* Bordes redondeados consistentes con .btn */
   cursor: pointer;
   transition: background-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -625,10 +590,9 @@ button {
 }
 
 /* ==========================================
-   NUEVOS DETALLES PARA TARJETAS DE SERVICIOS
+  TARJETAS DE SERVICIOS
    ========================================== */
 
-/* Contenedor relativo para la imagen para posicionar el badge de manera absoluta */
 .image-wrapper {
   position: relative;
   width: 100%;
@@ -738,49 +702,54 @@ button {
 }
 
 /* ==========================================
-   PLACA PARTICULAR COLOMBIANA REALISTA
+  PLACA PARTICULAR COLOMBIANA REALISTA
    ========================================== */
 .placa-colombiana {
-  background-color: #FBCD18; /* Amarillo tránsito exacto */
+  background-color: #FBCD18;
+  /* Amarillo tránsito exacto */
   color: #000000;
   font-family: 'Trebuchet MS', Arial, sans-serif;
   font-weight: 900;
-  font-size: 1.3rem; /* Subimos un poco para dar espacio a la etiqueta inferior */
+  font-size: 1.3rem;
+  /* Subimos un poco para dar espacio a la etiqueta inferior */
   letter-spacing: 3px;
   text-transform: uppercase;
   text-align: center;
-  
+
   /* Usamos flexbox para apilar el texto de la placa y "COLOMBIA" verticalmente */
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
-  padding: 6px 16px 3px 16px; /* Ajustamos márgenes internos */
+
+  padding: 6px 16px 3px 16px;
+  /* Ajustamos márgenes internos */
   border-radius: 6px;
-  border: 2px solid #000000; 
-  box-shadow: inset 0 0 0 2px #FBCD18, inset 0 0 0 3.5px #000000; 
+  border: 2px solid #000000;
+  box-shadow: inset 0 0 0 2px #FBCD18, inset 0 0 0 3.5px #000000;
   filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.15));
   line-height: 1;
 }
-
-/* El truco mágico: Agrega "COLOMBIA" abajo de forma automática y realista */
 .placa-colombiana::after {
   content: "COLOMBIA";
   font-size: 0.48rem;
   font-weight: 800;
   letter-spacing: 2px;
   margin-top: 4px;
-  border-top: 1px solid rgba(0, 0, 0, 0.2); /* Línea divisoria muy fina */
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  /* Línea divisoria muy fina */
   padding-top: 2px;
   width: 100%;
   text-align: center;
   opacity: 0.85;
 }
+
 /* Efecto hover interactivo para el nombre del usuario en el menú */
 .user-name-link:hover {
-  color: #3B7DD8 !important; /* Cambia dinámicamente al azul de tu marca */
-  text-shadow: 0 0 8px rgba(59, 125, 216, 0.3); /* Brillo sutil */
+  color: #3B7DD8 !important;
+  /* Cambia dinámicamente al azul de tu marca */
+  text-shadow: 0 0 8px rgba(59, 125, 216, 0.3);
+  /* Brillo sutil */
 }
 
 /* ==========================================
@@ -835,7 +804,8 @@ button {
 
 .user-name-link:hover {
   background-color: rgba(255, 255, 255, 0.2);
-  color: #FBCD18 !important; /* Brillo con el amarillo de la placa colombiana */
+  color: #FBCD18 !important;
+  /* Brillo con el amarillo de la placa colombiana */
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(251, 205, 24, 0.3);
 }
@@ -844,3 +814,94 @@ button {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(251, 205, 24, 0.1);
 }
+
+/* ==========================================================
+  ESTILOS PARA EL PANEL DE ADMINISTRACIÓN (MOTOR WASH SPA)
+   ========================================================== */
+
+/* 🚗 Etiquetas de Placas (Efecto placa vehicular) */
+.placa-tag {
+  background-color: #f1c40f;
+  color: #2c3e50;
+  padding: 4px 10px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: 2px solid #d4ac0d;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 1px;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 🚦 Base para los Badges de Estado */
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  min-width: 90px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.badge-pendiente {
+  background-color: #e67e22;
+  }
+
+.badge-en-curso {
+  background-color: #3498db;
+  animation: palpitar 2s infinite;
+  /* Pequeño efecto visual de actividad */
+}
+
+.badge-exito {
+  background-color: #2ecc71;
+  /* Verde para servicios listos y facturados */
+}
+
+.badge-peligro {
+  background-color: #e74c3c;
+  /* Rojo para cancelaciones o novedades */
+}
+
+/* 🧼 Ajuste extra opcional para las filas de la tabla al pasar el mouse */
+.tabla-servicios tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease;
+}
+
+/* Estado cuando el botón está PRESIONADO (Active) */
+.btn-action:active:not([disabled]) {
+  transform: translateY(0);
+}
+
+/* ESTADO DESHABILITADO (Cuando el operario está ocupado) */
+.btn-action:disabled {
+  background-color: #6c757d;
+  /* Gris opaco */
+  color: #e2e2e2;
+  opacity: 0.6;
+  cursor: not-allowed;
+  /* Cambia el cursor a un símbolo de bloqueo */
+  transform: none !important;
+  box-shadow: none !important;
+  text-transform: uppercase;
+}
+
+.toast {
+    padding: 15px 25px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: opacity 0.5s ease;
+    min-width: 250px;
+}
+
+.toast.exito { background-color: #28a745; }
+.toast.error { background-color: #dc3545; }
+
+
